@@ -1,22 +1,21 @@
 const ObjectID = require('mongodb').ObjectID;
 
 module.exports = function(app, db) {
-  const resumeCollection = db.collection('resume');
+  const posts = db.collection('posts');
 
   // Create item
-  app.post('/resume/create', (req, res) => {
-    const resumeItem = {
-      company: req.body.company,
+  app.post('/post/create', (req, res) => {
+    const post = {
+      title: req.body.title,
+      text: req.body.text,
       url: req.body.url,
       dates: {
         from: '',
         to: ''
-      },
-      position: req.body.position,
-      description: req.body.description
+      }
     }
 
-    resumeCollection.insert(resumeItem, (err, result) => {
+    posts.insert(post, (err, result) => {
       if (err) {
         res.send({ 'error': 'An error has occurred' });
       } else {
@@ -26,14 +25,14 @@ module.exports = function(app, db) {
   });
 
   // Read item
-  app.get('/resume/get/:id', (req, res) => {
+  app.get('/post/get/:id', (req, res) => {
     const id = req.params.id;
 
     const details = {
       '_id': new ObjectID(id)
     }
 
-    resumeCollection.findOne(details, (err, item) => {
+    posts.findOne(details, (err, item) => {
       if(err) {
         res.send({ 'error': 'An error has occurred' });
       } else {
@@ -43,8 +42,8 @@ module.exports = function(app, db) {
   });
 
   // Get all items
-  app.get('/resume/all', (req, res) => {
-    resumeCollection.find().toArray((err, result) => {
+  app.get('/posts/all', (req, res) => {
+    posts.find().toArray((err, result) => {
       if(err) {
         res.send({ 'error': 'An error has occurred' });
       } else {
@@ -54,25 +53,24 @@ module.exports = function(app, db) {
   });
 
   // Update item
-  app.put('/resume/update/:id', (req, res) => {
+  app.put('/post/update/:id', (req, res) => {
     const id = req.params.id;
 
     const details = {
       '_id': new ObjectID(id)
     }
 
-    const resumeItem = {
-      company: req.body.company,
+    const post = {
+      title: req.body.title,
+      text: req.body.text,
       url: req.body.url,
       dates: {
         from: '',
         to: ''
-      },
-      position: req.body.position,
-      description: req.body.description
+      }
     }
 
-    resumeCollection.update(details, resumeItem, (err, result) => {
+    posts.update(details, post, (err, result) => {
       if (err) {
         res.send({ 'error': 'An error has occurred' });
       } else {
@@ -82,14 +80,14 @@ module.exports = function(app, db) {
   });
 
   // Delete item
-  app.delete('/resume/delete/:id', (req, res) => {
+  app.delete('/post/delete/:id', (req, res) => {
     const id = req.params.id;
 
     const details = {
       '_id': new ObjectID(id)
     }
 
-    resumeCollection.remove(details, (err, item) => {
+    posts.remove(details, (err, item) => {
       if(err) {
         res.send({ 'error': 'An error has occurred' });
       } else {

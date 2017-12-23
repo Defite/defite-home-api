@@ -24,12 +24,29 @@ module.exports = function(app, db) {
     })
   });
 
-  // Read item
-  app.get('/post/get/:id', (req, res) => {
+  // Read item by id
+  app.get('/post/getById/:id', (req, res) => {
     const id = req.params.id;
 
     const details = {
       '_id': new ObjectID(id)
+    }
+
+    posts.findOne(details, (err, item) => {
+      if(err) {
+        res.send({ 'error': 'An error has occurred' });
+      } else {
+        res.send(item);
+      }
+    });
+  });
+
+  // Read item by url
+  app.get('/post/getByUrl/:url', (req, res) => {
+    const url = req.params.url;
+
+    const details = {
+      'url': url
     }
 
     posts.findOne(details, (err, item) => {
